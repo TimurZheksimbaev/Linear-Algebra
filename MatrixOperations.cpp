@@ -1,20 +1,21 @@
-//
-// Created by Тимур Жексимбаев on 22.04.2023.
-//
-#include<iomanip>
 #include<iostream>
+#include<vector>
+#include<cmath>
 
 using namespace std;
 
 class Matrix {
-public:
+protected:
+    vector<vector<double>> matrix;
     int n, m;
-    int d = 1.0;
-    double matrix[100][100];
+public:
+    Matrix() {}
 
     Matrix(int row, int column) {
         this->n = row;
         this->m = column;
+        for (int i = 0; i < n; i++)
+            matrix[i].resize(m, 0);
     }
 
     Matrix operator+(Matrix v) {
@@ -63,7 +64,7 @@ public:
     friend ostream &operator<<(ostream &output, Matrix &v) {
         for (int i = 0; i < v.n; i++) {
             for (int j = 0; j < v.m; j++) {
-                output << fixed << setprecision(4) << v.matrix[i][j] << ' ';
+                output << v.matrix[i][j] << ' ';
             }
             output << '\n';
         }
@@ -92,21 +93,30 @@ public:
         }
         return transposeMatrix;
     }
-
 };
 
 
-int main() {
-    /// Input data, for example
-    // 2 3
-    // 1 2 3
-    // 6 3 8
+class Vector : public Matrix {
+public:
+    Vector(int n) : Matrix(n, 1) {}
 
+    double Norm() {
+        double norm = 0.0;
+        for (int i = 0; i < n; i++) {
+            norm += pow(matrix[i][0], 2);
+        }
+        return sqrt(norm);
+    }
+};
+
+int main() {
     int n, m;
     cin >> n >> m;
     Matrix A(n, m);
+    Vector b(n);
     cin >> A;
-
-
+    cin >> b;
+    Vector x = A * b;
+    cout << x;
     return 0;
 }
